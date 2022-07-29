@@ -2,15 +2,6 @@ import React, { Component } from 'react';
 import css from './Searchbar.module.css';
 import { ImSearch } from 'react-icons/im';
 
-const URL =
-  'https://pixabay.com/api/?q=cat&page=1&key=your_key&image_type=photo&orientation=horizontal&per_page=12';
-
-// Your API key: 28923087-7732e16692c74d8b4e971a55b
-
-//            id - унікальний ідентифікатор
-//  webformatURL - посилання на маленьке зображення для списку карток
-// largeImageURL - посилання на велике зображення для модального вікна
-
 // приймає один проп onSubmit – функцію для передачі значення інпута під час сабміту форми.
 
 class Searchbar extends Component {
