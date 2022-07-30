@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Searchbar from './Searchbar';
 import api from 'services/ApiService';
+import ImageGallery from './ImageGallery';
 
 // Your API key: 28923087-7732e16692c74d8b4e971a55b
 
@@ -11,7 +12,7 @@ import api from 'services/ApiService';
 export default class App extends Component {
   state = {
     searchInput: '',
-    query: null,
+    query: [],
     error: null,
   };
 
@@ -22,7 +23,7 @@ export default class App extends Component {
     if (prevName !== nextName) {
       api
         .fetchItems(nextName)
-        .then(searchInput => this.setState({ searchInput }))
+        .then(query => this.setState({ query }))
         .catch(error => this.setState({ error }));
     }
   }
@@ -32,9 +33,11 @@ export default class App extends Component {
   };
 
   render() {
+    const  {query}  = this.state.query;
     return (
       <div style={{ maxWidth: 1170, padding: 10 }}>
         <Searchbar onSubmit={this.handleFormSubmit} />
+        {query !== [] ? <ImageGallery query={ query}/>:<p>Hello</p>}
       </div>
     );
   }

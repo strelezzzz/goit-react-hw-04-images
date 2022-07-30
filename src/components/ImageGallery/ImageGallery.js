@@ -1,10 +1,14 @@
+import ImageGalleryItem from 'components/ImageGalleryItem';
 import React from 'react';
+import css from './ImageGallery.module.css';
 
-const ImageGallery = () => {
+const ImageGallery = ({ query }) => {
   return (
-    <div>
-      <ul class="gallery">{/* <!-- Набір <li> із зображеннями --> */}</ul>
-    </div>
+    <ul className={css.gallery}>
+      {query.map(({ webformatURL, largeImageURL, id }) => (
+        <ImageGalleryItem key={id} src={webformatURL} alt={largeImageURL} />
+      ))}
+    </ul>
   );
 };
 

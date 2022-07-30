@@ -1,9 +1,13 @@
 import React from 'react';
+import css from './ImageGalleryItem.module.css';
+// id - унікальний ідентифікатор
+// webformatURL - посилання на маленьке зображення для списку карток
+// largeImageURL - посилання на велике зображення для модального вікна
 
-const ImageGalleryItem = () => {
+const ImageGalleryItem = ({ webformatURL, largeImageURL }) => {
   return (
-    <li class="gallery-item">
-      <img src="" alt="" />
+    <li className={css.ImageGalleryItem}>
+      <img src={webformatURL} alt={largeImageURL} />
     </li>
   );
 };
