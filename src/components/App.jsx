@@ -11,33 +11,44 @@ import ImageGallery from './ImageGallery';
 
 export default class App extends Component {
   state = {
-    searchInput: '',
-    query: [],
+    search: '',
+    pictures: [],
     error: null,
+    page: 1,
+    loading: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const prevName = prevProps.searchInput;
-    const nextName = this.props.searchInput;
+    const prevName = prevState.search;
+    const nextName = this.state.search;
+    // const prevPage = prevState.page;
+    // const nextPage = this.state.page;
 
     if (prevName !== nextName) {
+      this.setState({ loading: true });
       api
-        .fetchItems(nextName)
-        .then(query => this.setState({ query }))
-        .catch(error => this.setState({ error }));
+        .fetchItems(nextName, this.state.page)
+        .then(pictures => this.setState({ pictures }))
+        .then(({ pictures: { hits } }) => console.log({ hits }))
+
+        .catch(error => this.setState({ error }))
+        .finally(() => this.setState({ loading: false }));
     }
   }
 
-  handleFormSubmit = searchInput => {
-    this.setState({ searchInput });
+  handleFormSubmit = search => {
+    this.setState({ search });
   };
 
   render() {
-    const  {query}  = this.state.query;
+    const { pictures } = this.state.pictures;
+
     return (
       <div style={{ maxWidth: 1170, padding: 10 }}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {query !== [] ? <ImageGallery query={ query}/>:<p>Hello</p>}
+        {pictures && <ImageGallery items={pictures.hits} />}
+        {!pictures && <p>Щось пішло не так</p>}
+        {this.state.loading && <h1>Loading</h1>}
       </div>
     );
   }

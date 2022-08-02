@@ -29,7 +29,7 @@ class Searchbar extends Component {
         <form className={css.searchForm} onSubmit={this.handleSubmit}>
           <button type="submit" className={css.searchForm__button}>
             <span className={css.searchForm__button_label}>
-              <ImSearch style={{ marginRight: 10 }} />
+              <ImSearch style={{ marginRight: 10 }}>Find</ImSearch>
             </span>
           </button>
 
