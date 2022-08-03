@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Searchbar from './Searchbar';
 import api from 'services/ApiService';
 import ImageGallery from './ImageGallery';
+import Button from './Button';
 
 // Your API key: 28923087-7732e16692c74d8b4e971a55b
 
@@ -35,27 +36,25 @@ export default class App extends Component {
     }
   }
 
-  data = pictures => {
-    pictures.map(({ id, webromatURL, largeImageURL }) => ({
-      id,
-      webromatURL,
-      largeImageURL,
-    }));
-  };
+  handleChangePage = () => {
+  this.setState(prevState => ({page: prevState.page +1}))
+}
 
   handleFormSubmit = search => {
     this.setState({ search });
   };
 
   render() {
-    const { pictures } = this.state;
+    const { pictures, error, loading } = this.state;
 
     return (
       <div style={{ maxWidth: 1170, padding: 10 }}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {pictures && <ImageGallery items={pictures} />}
-        {!pictures && <p>Щось пішло не так</p>}
-        {this.state.loading && <h1>Loading</h1>}
+        {pictures.length > 0 && <ImageGallery items={pictures}  />}
+        {error && <p>Ой, щось пішло не так: {error.message}</p>}
+        {loading && <h1>Loading...</h1>}
+        {<Button nextPage={this.handleChangePage } />}
+        
       </div>
     );
   }
