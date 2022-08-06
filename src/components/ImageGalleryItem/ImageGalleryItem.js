@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import css from './ImageGalleryItem.module.css';
 // id - унікальний ідентифікатор
 // webformatURL - посилання на маленьке зображення для списку карток
@@ -6,10 +7,14 @@ import css from './ImageGalleryItem.module.css';
 
 const ImageGalleryItem = ({ srcProp, altProp }) => {
   return (
-    <li className={css.ImageGalleryItem}>
-      <img src={srcProp} alt={altProp} />
+    <li className={css.imageGalleryItem}>
+      <img className="imageGalleryItem__image" src={srcProp} alt={altProp} />
     </li>
   );
 };
 
+ImageGalleryItem.propTypes = {
+  srcProp: PropTypes.string.isRequired,
+  altProp: PropTypes.string.isRequired,
+};
 export default ImageGalleryItem;

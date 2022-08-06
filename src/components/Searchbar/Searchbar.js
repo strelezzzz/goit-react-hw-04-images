@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import css from './Searchbar.module.css';
 import { ImSearch } from 'react-icons/im';
 
 // приймає один проп onSubmit – функцію для передачі значення інпута під час сабміту форми.
 
 class Searchbar extends Component {
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  };
+
   state = {
     searchInput: '',
   };
@@ -16,14 +21,14 @@ class Searchbar extends Component {
   handleSubmit = event => {
     event.preventDefault();
     if (this.state.searchInput.trim() === '') {
-      alert('Введіть запит');
+      return alert('Введіть запит');
     }
     this.props.onSubmit(this.state.searchInput);
     this.setState({ searchInput: '' });
   };
 
-  onSubmit = () => {};
   render() {
+    const { searchInput } = this.state;
     return (
       <header className="searchbar">
         <form className={css.searchForm} onSubmit={this.handleSubmit}>
@@ -40,7 +45,7 @@ class Searchbar extends Component {
             autoFocus
             placeholder="Search images and photos"
             onChange={this.handleChangeInput}
-            value={this.state.searchInput}
+            value={searchInput}
           />
         </form>
       </header>
