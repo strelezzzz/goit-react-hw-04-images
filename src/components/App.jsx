@@ -3,6 +3,7 @@ import Searchbar from './Searchbar';
 import api from 'services/ApiService';
 import ImageGallery from './ImageGallery';
 import Button from './Button';
+import Modal from './Modal';
 
 // Your API key: 28923087-7732e16692c74d8b4e971a55b
 
@@ -17,6 +18,8 @@ export default class App extends Component {
     error: null,
     page: 1,
     loading: false,
+    showModal: false,
+    largeImage:'',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -57,16 +60,27 @@ export default class App extends Component {
     this.setState({ page: 1, pictures: [] });
   };
 
+  openModal = event => {
+    this.setState({ showModal: true });
+    this.setState({ largeImage: event.largeImageURL });
+  }
+
+  closeModal =() => {
+    this.setState (({showModal}) => ({ showModal: !showModal }));
+    
+  }
+
   render() {
-    const { pictures, error, loading } = this.state;
+    const { pictures, error, loading, showModal, largeImage } = this.state;
 
     return (
       <div style={{ maxWidth: 1170, padding: 10 }}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {pictures.length > 0 && <ImageGallery items={pictures} />}
+        {pictures.length > 0 && <ImageGallery items={pictures} handleModal ={this.openModal} />}
         {error && <p>Ой, щось пішло не так: {error.message}</p>}
         {loading && <h1>Loading...</h1>}
-        {<Button nextPage={this.handleChangePage} />}
+        {pictures.length !== 0 && <Button nextPage={this.handleChangePage} />}
+        {showModal &&< Modal onClose ={this.closeModal} largeImage ={largeImage} />}
       </div>
     );
   }

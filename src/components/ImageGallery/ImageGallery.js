@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ImageGalleryItem from 'components/ImageGalleryItem';
 import css from './ImageGallery.module.css';
 
-const ImageGallery = ({ items }) => {
+const ImageGallery = ({ items, handleModal }) => {
   return (
     <ul className={css.gallery}>
       {items.map(({ webformatURL, largeImageURL, id }) => (
@@ -11,6 +11,7 @@ const ImageGallery = ({ items }) => {
           key={id}
           srcProp={webformatURL}
           altProp={largeImageURL}
+          onClick={() => handleModal()}
         />
       ))}
     </ul>
