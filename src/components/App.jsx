@@ -22,26 +22,39 @@ export default class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevState.search;
     const nextName = this.state.search;
-    // const prevPage = prevState.page;
-    // const nextPage = this.state.page;
+    const prevPage = prevState.page;
+    const page = this.state.page;
 
     if (prevName !== nextName) {
+      this.setState({ loading: true, page: 1 });
+      api
+        .fetchItems(nextName, page)
+        .then(data => this.setState({ pictures: data.hits }))
+
+        .catch(error => this.setState({ error }))
+        .finally(() => this.setState({ loading: false }));
+    }
+    if (prevPage !== page && page !== 1) {
       this.setState({ loading: true });
       api
-        .fetchItems(nextName, this.state.page)
-        .then(pictures => this.setState({ pictures: pictures.hits }))
-
+        .fetchItems(nextName, page)
+        .then(data => {
+          this.setState(prevState => ({
+            pictures: [...prevState.pictures, ...data.hits],
+          }));
+        })
         .catch(error => this.setState({ error }))
         .finally(() => this.setState({ loading: false }));
     }
   }
 
   handleChangePage = () => {
-  this.setState(prevState => ({page: prevState.page +1}))
-}
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
 
   handleFormSubmit = search => {
     this.setState({ search });
+    this.setState({ page: 1, pictures: [] });
   };
 
   render() {
@@ -50,11 +63,10 @@ export default class App extends Component {
     return (
       <div style={{ maxWidth: 1170, padding: 10 }}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {pictures.length > 0 && <ImageGallery items={pictures}  />}
+        {pictures.length > 0 && <ImageGallery items={pictures} />}
         {error && <p>Ой, щось пішло не так: {error.message}</p>}
         {loading && <h1>Loading...</h1>}
-        {<Button nextPage={this.handleChangePage } />}
-        
+        {<Button nextPage={this.handleChangePage} />}
       </div>
     );
   }
