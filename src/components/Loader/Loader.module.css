@@ -1,7 +1,8 @@
-
+/*
+* Стили компонента Buton (Load more)
+*/
 .loader{
  display: flex;
  justify-content: center;
- padding-bottom: 20px;
  
 }

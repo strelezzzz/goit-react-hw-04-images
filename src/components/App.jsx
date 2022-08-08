@@ -16,7 +16,7 @@ import Loader from './Loader';
 
 export default class App extends Component {
   state = {
-    search: '',
+    search: null,
     pictures: [],
     error: null,
     page: 1,
@@ -75,13 +75,14 @@ export default class App extends Component {
   }
 
   render() {
-    const { pictures, error, loading, showModal, largeImageURL } = this.state;
+    const { pictures, error, loading, showModal, largeImageURL, search } = this.state;
 
     return (
       <div className={css.app} style={{ maxWidth: 1170, padding: 10 }}>
         <Searchbar onSubmit={this.handleFormSubmit} />
         {pictures.length > 0 && <ImageGallery items={pictures} openModal ={this.openModal} />}
         {error && <p>Ой, щось пішло не так: {error.message}</p>}
+        {pictures.length === 0 &&  search && <p>Try Again</p>}
         {loading && <Loader/>}
         {pictures.length !== 0 && pictures.length%12 === 0 && <Button nextPage={this.handleChangePage} />}
         {showModal &&< Modal onClose ={this.closeModal} largeImageURL ={largeImageURL} />}
