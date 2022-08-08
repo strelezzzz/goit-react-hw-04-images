@@ -9,7 +9,7 @@ const ImageGalleryItem = ({ srcProp, altProp, openModal }) => {
   return (
     <li className={css.imageGalleryItem}>
       <img
-        className="imageGalleryItem__image"
+        className={css.imageGalleryItem__image}
         src={srcProp}
         alt={altProp}
         onClick={() => openModal(altProp)}

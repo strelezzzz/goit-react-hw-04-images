@@ -30,7 +30,7 @@ class Searchbar extends Component {
   render() {
     const { searchInput } = this.state;
     return (
-      <header className="searchbar">
+      <header className={css.searchbar}>
         <form className={css.searchForm} onSubmit={this.handleSubmit}>
           <button type="submit" className={css.searchForm__button}>
             <span className={css.searchForm__button_label}>
