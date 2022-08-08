@@ -19,7 +19,7 @@ export default class App extends Component {
     page: 1,
     loading: false,
     showModal: false,
-    largeImage:'',
+    largeImageURL:'ss',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -62,7 +62,8 @@ export default class App extends Component {
 
   openModal = event => {
     this.setState({ showModal: true });
-    this.setState({ largeImage: event.largeImageURL });
+    this.setState({ largeImageURL: event});
+    
   }
 
   closeModal =() => {
@@ -71,16 +72,16 @@ export default class App extends Component {
   }
 
   render() {
-    const { pictures, error, loading, showModal, largeImage } = this.state;
+    const { pictures, error, loading, showModal, largeImageURL } = this.state;
 
     return (
       <div style={{ maxWidth: 1170, padding: 10 }}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {pictures.length > 0 && <ImageGallery items={pictures} handleModal ={this.openModal} />}
+        {pictures.length > 0 && <ImageGallery items={pictures} openModal ={this.openModal} />}
         {error && <p>Ой, щось пішло не так: {error.message}</p>}
         {loading && <h1>Loading...</h1>}
         {pictures.length !== 0 && <Button nextPage={this.handleChangePage} />}
-        {showModal &&< Modal onClose ={this.closeModal} largeImage ={largeImage} />}
+        {showModal &&< Modal onClose ={this.closeModal} largeImageURL ={largeImageURL} />}
       </div>
     );
   }

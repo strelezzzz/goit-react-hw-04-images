@@ -5,10 +5,15 @@ import css from './ImageGalleryItem.module.css';
 // webformatURL - посилання на маленьке зображення для списку карток
 // largeImageURL - посилання на велике зображення для модального вікна
 
-const ImageGalleryItem = ({ srcProp, altProp }) => {
+const ImageGalleryItem = ({ srcProp, altProp, openModal }) => {
   return (
     <li className={css.imageGalleryItem}>
-      <img className="imageGalleryItem__image" src={srcProp} alt={altProp} />
+      <img
+        className="imageGalleryItem__image"
+        src={srcProp}
+        alt={altProp}
+        onClick={() => openModal(altProp)}
+      />
     </li>
   );
 };

@@ -7,7 +7,8 @@ const modalRoot = document.querySelector('#modal-root');
 
 export default class Modal extends Component {
   static propTypes = {
-    largeImage: PropTypes.string.isRequired,
+    largeImageURL: PropTypes.string.isRequired,
+    onClose: PropTypes.func,
   };
 
   componentDidMount() {
@@ -31,11 +32,11 @@ export default class Modal extends Component {
   };
 
   render() {
-    const { largeImage } = this.props;
+    const { largeImageURL } = this.props;
     return createPortal(
       <div className={css.overlay} onClick={this.onBackdropClick}>
-        <div class={css.modal}>
-          <img src={largeImage} alt="" />
+        <div className={css.modal}>
+          <img src={largeImageURL} alt="" />
         </div>
       </div>,
       modalRoot
