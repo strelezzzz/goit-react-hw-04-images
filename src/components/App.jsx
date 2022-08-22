@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import Searchbar from './Searchbar';
 import api from 'services/ApiService';
 import ImageGallery from './ImageGallery';
@@ -13,91 +13,153 @@ import Loader from './Loader';
 //  webformatURL - посилання на маленьке зображення для списку карток
 // largeImageURL - посилання на велике зображення для модального вікна
 
-export default class App extends Component {
-  state = {
-    search: null,
-    pictures: [],
-    error: null,
-    page: 1,
-    loading: false,
-    showModal: false,
-    largeImageURL: null,
+const App = () => {
+  const [search, setSearch] = useState(null);
+  const [pictures, setPictures] = useState([]);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [largeImageURL, setLargeImageURL] = useState(null);
+  //
+  const handleChangePage = () => {
+    setPage(prevState => prevState + 1);
+  };
+  //
+  const handleFormSubmit = search => {
+    setSearch(search);
+    setPage(1);
+    setPictures([]);
+  };
+  //
+  const openModal = event => {
+    setShowModal(true);
+    setLargeImageURL(event);
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    const prevName = prevState.search;
-    const nextName = this.state.search;
-    const prevPage = prevState.page;
-    const page = this.state.page;
-
-    if (prevName !== nextName) {
-      this.setState({ loading: true, page: 1 });
-      api
-        .fetchItems(nextName, page)
-        .then(data => this.setState({ pictures: data.hits }))
-
-        .catch(error => this.setState({ error }))
-        .finally(() => this.setState({ loading: false }));
-    }
-    if (prevPage !== page && page !== 1) {
-      this.setState({ loading: true });
-      api
-        .fetchItems(nextName, page)
-        .then(data => {
-          this.setState(prevState => ({
-            pictures: [...prevState.pictures, ...data.hits],
-          }));
-        })
-        .catch(error => this.setState({ error }))
-        .finally(() => this.setState({ loading: false }));
-    }
-  }
-
-  handleChangePage = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
+  //
+  const closeModal = () => {
+    setShowModal(!showModal);
   };
+  //
+  useEffect(() => {
+    if (!search) return;
 
-  handleFormSubmit = search => {
-    this.setState({ search });
-    this.setState({ page: 1, pictures: [] });
-  };
+    setLoading(true);
+    setPage(page);
 
-  openModal = event => {
-    this.setState({ showModal: true });
-    this.setState({ largeImageURL: event });
-  };
+    api
+      .fetchItems(search, page)
+      .then(data => setPictures(prevState => [...prevState, ...data.hits]))
+      .catch(error => setError(error))
+      .finally(() => setLoading(false));
+  }, [search, page]);
 
-  closeModal = () => {
-    this.setState(({ showModal }) => ({ showModal: !showModal }));
-  };
+  return (
+    <div className={css.app} style={{ maxWidth: 1170, padding: 10 }}>
+      <Searchbar onSubmit={handleFormSubmit} />
+      {pictures.length > 0 && (
+        <ImageGallery items={pictures} openModal={openModal} />
+      )}
+      {error && <p>Ой, щось пішло не так: {error.message}</p>}
+      {pictures.length === 0 && search && <p>Try Again</p>}
+      {loading && <Loader />}
+      {pictures.length !== 0 && pictures.length % 12 === 0 && (
+        <Button nextPage={handleChangePage} />
+      )}
+      {showModal && (
+        <Modal onClose={() => closeModal()} largeImageURL={largeImageURL} />
+      )}
+    </div>
+  );
+};
+//
+// class oldApp extends Component {
+//   state = {
+//     search: null,
+//     pictures: [],
+//     error: null,
+//     page: 1,
+//     loading: false,
+//     showModal: false,
+//     largeImageURL: null,
+//   };
 
-  render() {
-    const { pictures, error, loading, showModal, largeImageURL, search } =
-      this.state;
+// componentDidUpdate(prevProps, prevState) {
+//   const prevName = prevState.search;
+//   const nextName = this.state.search;
+//   const prevPage = prevState.page;
+//   const page = this.state.page;
 
-    return (
-      <div className={css.app} style={{ maxWidth: 1170, padding: 10 }}>
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        {pictures.length > 0 && (
-          <ImageGallery items={pictures} openModal={this.openModal} />
-        )}
-        {error && <p>Ой, щось пішло не так: {error.message}</p>}
-        {pictures.length === 0 && search && <p>Try Again</p>}
-        {loading && <Loader />}
-        {pictures.length !== 0 && pictures.length % 12 === 0 && (
-          <Button nextPage={this.handleChangePage} />
-        )}
-        {showModal && (
-          <Modal
-            onClose={() => this.closeModal()}
-            largeImageURL={largeImageURL}
-          />
-        )}
-      </div>
-    );
-  }
-}
+//   if (prevName !== nextName) {
+//     this.setState({ loading: true, page: 1 });
+//     api
+//       .fetchItems(nextName, page)
+//       .then(data => this.setState({ pictures: data.hits }))
 
+//       .catch(error => this.setState({ error }))
+//       .finally(() => this.setState({ loading: false }));
+//   }
+//   if (prevPage !== page && page !== 1) {
+//     this.setState({ loading: true });
+//     api
+//       .fetchItems(nextName, page)
+//       .then(data => {
+//         this.setState(prevState => ({
+//           pictures: [...prevState.pictures, ...data.hits],
+//         }));
+//       })
+//       .catch(error => this.setState({ error }))
+//       .finally(() => this.setState({ loading: false }));
+//   }
+// }
+
+// handleChangePage = () => {
+//   this.setState(prevState => ({ page: prevState.page + 1 }));
+// };
+
+// handleFormSubmit = search => {
+//   this.setState({ search });
+//   this.setState({ page: 1, pictures: [] });
+// };
+
+// openModal = event => {
+//   this.setState({ showModal: true });
+//   this.setState({ largeImageURL: event });
+// };
+
+// closeModal = () => {
+//   this.setState(({ showModal }) => ({ showModal: !showModal }));
+// };
+
+//   render() {
+//     const { pictures, error, loading, showModal, largeImageURL, search } =
+//       this.state;
+
+//     return (
+//       <div className={css.app} style={{ maxWidth: 1170, padding: 10 }}>
+//         <Searchbar onSubmit={this.handleFormSubmit} />
+//         {pictures.length > 0 && (
+//           <ImageGallery items={pictures} openModal={this.openModal} />
+//         )}
+//         {error && <p>Ой, щось пішло не так: {error.message}</p>}
+//         {pictures.length === 0 && search && <p>Try Again</p>}
+//         {loading && <Loader />}
+//         {pictures.length !== 0 && pictures.length % 12 === 0 && (
+//           <Button nextPage={this.handleChangePage} />
+//         )}
+//         {showModal && (
+//           <Modal
+//             onClose={() => this.closeModal()}
+//             largeImageURL={largeImageURL}
+//           />
+//         )}
+//       </div>
+//     );
+//   }
+// }
+
+export default App;
 // {
 //   "search": "cat",
 //   "hits": [
