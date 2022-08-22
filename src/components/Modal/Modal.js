@@ -6,6 +6,7 @@ import css from './Modal.module.css';
 const modalRoot = document.querySelector('#modal-root');
 
 const Modal = ({ onClose, largeImageURL }) => {
+  //вішаємо слухача при маунті , і знімаємо після івенту за допомогою хука
   useEffect(() => {
     window.addEventListener('keydown', closeModal);
 
