@@ -46,7 +46,6 @@ const App = () => {
     if (!search) return;
 
     setLoading(true);
-    setPage(page);
 
     api
       .fetchItems(search, page)
