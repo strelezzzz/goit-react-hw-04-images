@@ -3,10 +3,9 @@ import Searchbar from './Searchbar';
 import api from 'services/ApiService';
 import ImageGallery from './ImageGallery';
 import Button from './Button';
-import Modal from './Modal';
-import css from './App.module.css'
+import Modal from './Modal/Modal';
+import css from './App.module.css';
 import Loader from './Loader';
-
 
 // Your API key: 28923087-7732e16692c74d8b4e971a55b
 
@@ -22,7 +21,7 @@ export default class App extends Component {
     page: 1,
     loading: false,
     showModal: false,
-    largeImageURL:null,
+    largeImageURL: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -65,27 +64,35 @@ export default class App extends Component {
 
   openModal = event => {
     this.setState({ showModal: true });
-    this.setState({ largeImageURL: event});
-    
-  }
+    this.setState({ largeImageURL: event });
+  };
 
-  closeModal =() => {
-    this.setState (({showModal}) => ({ showModal: !showModal }));
-    
-  }
+  closeModal = () => {
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  };
 
   render() {
-    const { pictures, error, loading, showModal, largeImageURL, search } = this.state;
+    const { pictures, error, loading, showModal, largeImageURL, search } =
+      this.state;
 
     return (
       <div className={css.app} style={{ maxWidth: 1170, padding: 10 }}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {pictures.length > 0 && <ImageGallery items={pictures} openModal ={this.openModal} />}
+        {pictures.length > 0 && (
+          <ImageGallery items={pictures} openModal={this.openModal} />
+        )}
         {error && <p>Ой, щось пішло не так: {error.message}</p>}
-        {pictures.length === 0 &&  search && <p>Try Again</p>}
-        {loading && <Loader/>}
-        {pictures.length !== 0 && pictures.length%12 === 0 && <Button nextPage={this.handleChangePage} />}
-        {showModal &&< Modal onClose ={this.closeModal} largeImageURL ={largeImageURL} />}
+        {pictures.length === 0 && search && <p>Try Again</p>}
+        {loading && <Loader />}
+        {pictures.length !== 0 && pictures.length % 12 === 0 && (
+          <Button nextPage={this.handleChangePage} />
+        )}
+        {showModal && (
+          <Modal
+            onClose={() => this.closeModal()}
+            largeImageURL={largeImageURL}
+          />
+        )}
       </div>
     );
   }
