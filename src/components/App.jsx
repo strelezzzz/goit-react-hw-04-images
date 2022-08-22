@@ -73,6 +73,8 @@ const App = () => {
     </div>
   );
 };
+
+export default App;
 //
 // class oldApp extends Component {
 //   state = {
@@ -159,7 +161,6 @@ const App = () => {
 //   }
 // }
 
-export default App;
 // {
 //   "search": "cat",
 //   "hits": [
