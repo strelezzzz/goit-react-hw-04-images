@@ -49,7 +49,8 @@ const App = () => {
 
     api
       .fetchItems(search, page)
-      .then(data => setPictures(prevState => [...prevState, ...data.hits]))
+      .then(data => setPictures(prevState => [...prevState, ...data
+      ]))
       .catch(error => setError(error))
       .finally(() => setLoading(false));
   }, [search, page]);

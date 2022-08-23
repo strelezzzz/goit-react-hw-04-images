@@ -4,7 +4,15 @@ async function fetchItems(searchInput, page) {
     `https://pixabay.com/api/?q=${searchInput}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
   );
   if (response) {
-    return response.json();
+    const pictures = await response.json();
+    const images = await pictures.hits.map(item => {
+      return {
+        id: item.id,
+        largeImageURL: item.largeImageURL,
+        webformatURL: item.webformatURL,
+      };
+    });
+    return images;
   }
   return await Promise.reject(new Error(`Немає картинок за таким запитом`));
 }
